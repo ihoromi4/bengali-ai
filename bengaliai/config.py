@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from catalyst.dl import utils
 
 output_classes = OrderedDict(
     consonant_diacritic=7,
@@ -37,14 +36,6 @@ VALID_SIZE = 0.1
 TRAIN_MEAN = 0.06922848809290576
 TRAIN_STD = 0.20515700083327537
 
-epochs = 30
-batch_size = 24
 num_workers = 4
 logdir = './logs'
-
-device = utils.get_device()
-
-utils.set_global_seed(SEED)
-
-print(f"device: {device}")
 

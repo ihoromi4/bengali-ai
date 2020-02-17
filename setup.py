@@ -27,24 +27,20 @@ setup(
         'Topic :: Utilities',
     ],
     install_requires=[
+        'numpy',
+        'pandas',
+        'pyarrow',
+        'matplotlib',
+        'seaborn',
+        'scikit-learn',
+        'torch',
+        'torchvision',
+        'catalyst[contrib]',
+        'albumentations',
+        'opencv-contrib-python',
+        'tqdm',
+        'pretrainedmodels',
+        'kaggle',
     ],
-    extras_require={
-        'lib': [
-            'numpy',
-            'pandas',
-            'pyarrow',
-            'matplotlib',
-            'seaborn',
-            'scikit-learn',
-            'torch',
-            'torchvision',
-            'catalyst[dl,contrib]',
-            'albumentations',
-            'opencv-contrib-python',
-            'tqdm',
-            'pretrainedmodels',
-            'kaggle',
-        ],
-    }
 )
 
