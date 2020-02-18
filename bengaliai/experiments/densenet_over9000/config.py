@@ -1,4 +1,4 @@
-experiment_name = 'densenet201'
+experiment_name = 'densenet201-over9000'
 
 experiment_config = {
     "model_params": {
@@ -107,7 +107,7 @@ experiment_config = {
         },
         "stage1": {
             "optimizer_params": {
-                "optimizer": "Adam",
+                "optimizer": "Over9000",
                 "lr": 0.001
             }
         }
