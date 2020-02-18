@@ -1,4 +1,6 @@
-{
+experiment_name = 'densenet201'
+
+experiment_config = {
 	"model_params": {
 		"model_name": "densenet201",
 		"output_classes": [
@@ -6,13 +8,12 @@
 			168,
 			11
 		],
-		"pretrained": true
+		"pretrained": True
 	},
 	"runner_params": {},
 	"args": {
 		"logdir": "./logs",
-		"verbose": true,
-        "check": true
+		"verbose": True
 	},
 	"stages": {
 		"data_params": {
@@ -69,7 +70,7 @@
 				"callback": "EarlyStoppingCallback",
 				"patience": 4,
 				"metric": "hmar",
-				"minimize": false
+				"minimize": False
 			},
 			"hmar_gr": {
 				"callback": "HMacroAveragedRecall",

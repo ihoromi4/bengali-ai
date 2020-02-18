@@ -1,3 +1,4 @@
+import os
 from collections import OrderedDict
 
 output_classes = OrderedDict(
@@ -38,4 +39,7 @@ TRAIN_STD = 0.20515700083327537
 
 num_workers = 4
 logdir = './logs'
+
+HOSTNAME = os.uname()[1]
+WANDB_PROJECT = 'bengali-ai'
 

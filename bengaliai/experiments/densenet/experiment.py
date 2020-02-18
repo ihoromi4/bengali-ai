@@ -12,22 +12,30 @@ runner, experiment, config = densenet.run()
 
 import os
 import json
+import datetime
 from collections import OrderedDict
+
 import pandas as pd
+import cv2
 import albumentations
 from albumentations.pytorch.transforms import ToTensorV2
-from torchvision import models
-from catalyst.dl import ConfigExperiment
-from catalyst.dl import SupervisedRunner
-from catalyst.dl import utils
 from sklearn.model_selection import train_test_split
-import cv2
+
+from torchvision import models
+
+from catalyst.dl import ConfigExperiment
+#from catalyst.dl import SupervisedRunner
+from catalyst.dl import SupervisedWandbRunner as SupervisedRunner
+from catalyst.dl import utils
 
 from bengaliai.data.zip_dataset import ZIPImageDataset
 from bengaliai.models.torchvision_classifier import TorchVisionBengaliClassifier
 from bengaliai.metrics import HMacroAveragedRecall, AverageMetric
 from bengaliai.data.parquet2zip import parquet_to_images
 from bengaliai.config import *
+from .config import experiment_name, experiment_config
+
+import wandb
 
 
 class Experiment(ConfigExperiment):
@@ -83,29 +91,42 @@ class Experiment(ConfigExperiment):
         return model
 
 
-def run():
-    device = utils.get_device()
-    utils.set_global_seed(SEED)
+def load_config_from_json(filepath: str = __file__):
+    path = os.path.dirname(os.path.abspath(filepath))
+
+    with open(os.path.join(path, 'config.json')) as f:
+        return json.load(f)
+
+
+def run(name: str = None, config: dict = None, device: str = None) -> dict:
+    config = config or experiment_config
+    device = device or utils.get_device()
     print(f"device: {device}")
 
+    utils.set_global_seed(SEED)
+
+    # inititalize weigths & biases
+    name = name or '_'.join(filter(None, [experiment_name, f"{datetime.datetime.now():%Y-%m-%d-%S}"]))
+    wandb.init(name, project=WANDB_PROJECT, id=name)
+
+    # convert parquet ot zip
     parquet_to_images(TRAIN, ZIP_TRAIN_FILE, SIZE)
     parquet_to_images(TEST, ZIP_TEST_FILE, SIZE)
 
-    path = os.path.dirname(os.path.abspath(__file__))
-    with open(os.path.join(path, 'config.json')) as f:
-        config = json.load(f)
-
-    experiment = Experiment(config)
-
+    # run experiment
     runner = SupervisedRunner(
         device=device,
         input_key="images",
         output_key=["logit_" + c for c in output_classes.keys()],
         input_target_key=list(output_classes.keys()),)
-
+    experiment = Experiment(config)
     runner.run_experiment(experiment)
 
-    return runner, experiment, config
+    return {
+        'runner': runner,
+        'experiment': experiment,
+        'config': config,
+    }
 
 
 if __name__ == '__main__':
