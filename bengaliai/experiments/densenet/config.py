@@ -1,6 +1,11 @@
 experiment_name = 'densenet201'
 
 experiment_config = {
+    "monitoring_params": {
+        "name": experiment_name,
+        "tags": ["pytorch", "catalyst", "torchvision", "densenet201"],
+        "project": "bengali-ai"
+    },
     "model_params": {
         "model_name": "densenet201",
         "output_classes": [
@@ -22,10 +27,7 @@ experiment_config = {
         },
         "state_params": {
             "num_epochs": 30,
-            "checkpoint_data": {
-                "exp": "densenet201, batch 128, epochs 30",
-                "date": "17-02-2020"
-            }
+            "checkpoint_data": {}
         },
         "criterion_params": {
             "criterion": "CrossEntropyLoss"

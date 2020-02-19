@@ -35,8 +35,6 @@ from bengaliai.data.parquet2zip import parquet_to_images
 from bengaliai.config import *
 from .config import experiment_name, experiment_config
 
-import wandb
-
 from catalyst.core.registry import OPTIMIZERS
 from bengaliai import over9000
 OPTIMIZERS.add(over9000.Over9000)
@@ -45,6 +43,7 @@ OPTIMIZERS.add(over9000.Over9000)
 class Experiment(ConfigExperiment):
     @staticmethod
     def get_transforms(stage: str = None, mode: str = None):
+    # def get_transforms(self, stage: str = None, dataset: str = None):
         if mode == 'train':
             return albumentations.Compose([
                 # blur
@@ -89,9 +88,15 @@ class Experiment(ConfigExperiment):
         ))
     
     @staticmethod
-    def _get_model(model_name: str, output_classes: list, pretrained: bool):
+    def _get_model(model_name: str, output_classes: list, pretrained: bool = True, weights_path: str = None):
+        if weights_path:
+            checkpoint = torch.load(weights_path)
+            model.load_state_dict(checkpoint['model_state_dict'])
+            pretrained = False
+
         backbone = getattr(models, model_name)
         model = TorchVisionBengaliClassifier(backbone, output_classes, pretrained)
+
         return model
 
 
@@ -102,7 +107,7 @@ def load_config_from_json(filepath: str = __file__):
         return json.load(f)
 
 
-def run(name: str = None, config: dict = None, device: str = None) -> dict:
+def run(name: str = None, config: dict = None, device: str = None, check: bool = False) -> dict:
     config = config or experiment_config
     device = device or utils.get_device()
     print(f"device: {device}")
@@ -111,7 +116,6 @@ def run(name: str = None, config: dict = None, device: str = None) -> dict:
 
     # inititalize weigths & biases
     name = name or '_'.join(filter(None, [experiment_name, f"{datetime.datetime.now():%Y-%m-%d-%S}"]))
-    wandb.init(name, project=WANDB_PROJECT, id=name)
 
     # convert parquet ot zip
     parquet_to_images(TRAIN, ZIP_TRAIN_FILE, SIZE)
@@ -124,7 +128,7 @@ def run(name: str = None, config: dict = None, device: str = None) -> dict:
         output_key=["logit_" + c for c in output_classes.keys()],
         input_target_key=list(output_classes.keys()),)
     experiment = Experiment(config)
-    runner.run_experiment(experiment)
+    runner.run_experiment(experiment, check=check)
 
     return {
         'runner': runner,

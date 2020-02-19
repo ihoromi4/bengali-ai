@@ -107,7 +107,6 @@ def run(name: str = None, config: dict = None, device: str = None) -> dict:
 
     # inititalize weigths & biases
     name = name or '_'.join(filter(None, [experiment_name, f"{datetime.datetime.now():%Y-%m-%d-%S}"]))
-    wandb.init(name, project=WANDB_PROJECT, id=name)
 
     # convert parquet ot zip
     parquet_to_images(TRAIN, ZIP_TRAIN_FILE, SIZE)
