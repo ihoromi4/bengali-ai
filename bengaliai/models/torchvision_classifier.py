@@ -15,7 +15,7 @@ class TorchVisionBengaliClassifier(nn.Module):
         
         if one_channel:
             conv0 = next((l for l in self.backbone.features.modules() if isinstance(l, nn.Conv2d)))
-            conv0.weight = nn.Parameter(conv0.weight.sum(1, keepdim=True))
+            conv0.weight = nn.Parameter(conv0.weight.mean(1, keepdim=True))
             conv0.in_channels = 1
             
         in_channels = self.backbone.features.conv0.in_channels
