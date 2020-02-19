@@ -28,7 +28,7 @@ def get_submission(model, data_loader, input_key: str, names: list, device=None)
     flatten_pred = sum(zip(*arrays), ())
 
     row_id = []
-    for i in range(pc[0].shape[0]):
+    for i in range(arrays[0].shape[0]):
         row_id.extend(['Test_%s_%s' %(i, n) for n in names])
 
     return pd.DataFrame({'row_id': row_id, 'target': flatten_pred})
