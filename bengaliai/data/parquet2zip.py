@@ -16,19 +16,22 @@ def parquet_to_images(filenames: str, out_filename: str, size: int = 128):
         print('File', out_filename, 'already exists. Abort.')
         return
 
-    print('Create file:', out_filename)    
+    print('Create file:', out_filename)
     with zipfile.ZipFile(out_filename, 'w') as f_zip:
         for filename in filenames:
-            df = None; gc.collect()
             df = pd.read_parquet(filename)
             print('Parquet loaded.')
 
             data = df.iloc[:, 1:].values.reshape(-1, HEIGHT, WIDTH).astype(np.uint8)
             data = 255 - data
+            
+            names = list(df.iloc[:, 0])
+
+            gc.collect()
 
             print('Start processing images...')
             for idx in tqdm(range(len(df))):
-                name = df.iloc[idx, 0]
+                name = names[idx]
 
                 img = (data[idx] * (255.0 / data[idx].max())).astype(np.uint8)
                 img = crop_resize(img, size)
