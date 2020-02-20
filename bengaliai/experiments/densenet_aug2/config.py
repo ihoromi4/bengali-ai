@@ -26,7 +26,7 @@ experiment_config = {
             "num_workers": 4
         },
         "state_params": {
-            "num_epochs": 30,
+            "num_epochs": 100,
             "checkpoint_data": {}
         },
         "criterion_params": {
