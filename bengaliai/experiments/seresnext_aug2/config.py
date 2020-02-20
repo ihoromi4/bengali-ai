@@ -23,7 +23,7 @@ experiment_config = {
     },
     "stages": {
         "data_params": {
-            "batch_size": 64,
+            "batch_size": 32,
             "num_workers": 4
         },
         "state_params": {

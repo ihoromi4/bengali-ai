@@ -119,7 +119,7 @@ def run(name: str = None, config: dict = None, device: str = None) -> dict:
     device = device or utils.get_device()
     print(f"device: {device}")
 
-    config['stages']['stage_params']['checkpoint_data']['image_size'] = SIZE
+    config['stages']['state_params']['checkpoint_data']['image_size'] = SIZE
 
     utils.set_global_seed(SEED)
 
