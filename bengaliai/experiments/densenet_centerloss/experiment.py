@@ -40,7 +40,8 @@ from bengaliai.metrics import HMacroAveragedRecall, AverageMetric
 from bengaliai.data.parquet2zip import parquet_to_images
 from bengaliai.config import *
 
-from .center_loss import CenterLoss
+#from .center_loss import CenterLoss
+from .scaled_center_loss import ScaledCenterLoss as CenterLoss
 
 use_gpu = torch.cuda.is_available()
 experiment_name = 'densenet_central_loss'
@@ -82,18 +83,21 @@ class Experiment(SupervisedExperiment):
                 output_key="logit_grapheme_root",
                 criterion_key='cross_entropy',
                 prefix='loss_gr',
+                multiplier=0.33
             )),
             ('loss_vd', CriterionCallback(
                 input_key="vowel_diacritic",
                 output_key="logit_vowel_diacritic",
                 criterion_key='cross_entropy',
                 prefix='loss_vd',
+                multiplier=0.33
             )),
             ('loss_cd', CriterionCallback(
                 input_key="consonant_diacritic",
                 output_key="logit_consonant_diacritic",
                 criterion_key='cross_entropy',
                 prefix='loss_cd',
+                multiplier=0.33
             )),
             # central loss
             ('central_gr', CriterionCallback(
@@ -101,31 +105,27 @@ class Experiment(SupervisedExperiment):
                 output_key="features",
                 criterion_key='central_gr',
                 prefix='central_gr',
+                multiplier=1e-4
             )),
             ('central_vd', CriterionCallback(
                 input_key="vowel_diacritic",
                 output_key="features",
                 criterion_key='central_vd',
                 prefix='central_vd',
+                multiplier=1e-4
             )),
             ('central_cd', CriterionCallback(
                 input_key="consonant_diacritic",
                 output_key="features",
                 criterion_key='central_cd',
                 prefix='central_cd',
+                multiplier=1e-4
             )),
             # aggregator
             ('loss', CriterionAggregatorCallback(
                 prefix="loss",
                 loss_aggregate_fn="sum",
-                loss_keys={
-                    "loss_gr": 0.33,
-                    "loss_vd": 0.33,
-                    "loss_cd": 0.33,
-                    "central_gr": 0.1,
-                    "central_vd": 0.1,
-                    "central_cd": 0.1
-                },
+                loss_keys=["loss_gr", "loss_vd", "loss_cd", "central_gr", "central_vd", "central_cd"]
             )),
             ('early_stopping', catalyst.dl.EarlyStoppingCallback(4, 'hmar_avg', minimize=False)),
             ('hmar_gr', HMacroAveragedRecall(input_key="grapheme_root", output_key="logit_grapheme_root", prefix="hmar_gr")),
@@ -221,7 +221,7 @@ class Experiment(SupervisedExperiment):
 
         return torch.optim.Adam([
             {'params': model.parameters(), 'lr': 1e-3},
-            {'params': itertools.chain(*criterion_params), 'lr': 1e-1}])
+            {'params': itertools.chain(*criterion_params), 'lr': 1e-3}])
 
 
 def run(name: str = None, device: str = None, check: bool = False) -> dict:
