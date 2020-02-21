@@ -221,7 +221,7 @@ class Experiment(SupervisedExperiment):
 
         return torch.optim.Adam([
             {'params': model.parameters(), 'lr': 1e-3},
-            {'params': itertools.chain(*criterion_params), 'lr': 1e-5}])
+            {'params': itertools.chain(*criterion_params), 'lr': 1e-1}])
 
 
 def run(name: str = None, device: str = None, check: bool = False) -> dict:
