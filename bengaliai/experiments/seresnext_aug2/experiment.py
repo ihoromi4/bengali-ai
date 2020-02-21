@@ -21,6 +21,7 @@ import albumentations
 from albumentations.pytorch.transforms import ToTensorV2
 from sklearn.model_selection import train_test_split
 
+import torch
 from torchvision import models
 
 from catalyst.dl import ConfigExperiment
@@ -43,6 +44,11 @@ ZIP_TEST_FILE = f'test{SIZE}.zip'
 
 
 class Experiment(ConfigExperiment):
+    def __init__(self, config, model_filepath: str = None):
+        super().__init__(config)
+
+        self._model_filepath = model_filepath
+
     @staticmethod
     def get_transforms(stage: str = None, mode: str = None):
         if mode == 'train':
@@ -101,9 +107,13 @@ class Experiment(ConfigExperiment):
             ('valid', valid_dataset),
         ))
     
-    @staticmethod
-    def _get_model(model_name: str, output_classes: list, pretrained: str):
+    def _get_model(self, model_name: str, output_classes: list, pretrained: str):
         model = PretrainedModelsBengaliClassifier(model_name, output_classes, pretrained)
+
+        if self._model_filepath:
+            checkpoint = torch.load(self._model_filepath)
+            model.load_state_dict(checkpoint['model_state_dict'])
+
         return model
 
 
@@ -114,7 +124,13 @@ def load_config_from_json(filepath: str = __file__):
         return json.load(f)
 
 
-def run(name: str = None, config: dict = None, device: str = None, check: bool = False) -> dict:
+def run(
+        name: str = None,
+        config: dict = None,
+        model_filepath: str = None,
+        device: str = None,
+        check: bool = False) -> dict:
+
     config = config or experiment_config
     device = device or utils.get_device()
     print(f"device: {device}")
@@ -136,7 +152,7 @@ def run(name: str = None, config: dict = None, device: str = None, check: bool =
         input_key="images",
         output_key=["logit_" + c for c in output_classes.keys()],
         input_target_key=list(output_classes.keys()),)
-    experiment = Experiment(config)
+    experiment = Experiment(config, model_filepath)
     runner.run_experiment(experiment, check=check)
 
     return {
