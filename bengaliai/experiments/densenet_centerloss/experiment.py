@@ -13,6 +13,7 @@ runner, experiment = densenet.run()
 import os
 import json
 import datetime
+import itertools
 from collections import OrderedDict
 
 import pandas as pd
@@ -216,12 +217,8 @@ class Experiment(SupervisedExperiment):
         return self._criterion
 
     def get_optimizer(self, stage: str, model):
-        params = list(model.parameters())
-
-        for c in self._criterion.values():
-            params += list(c.parameters())
-
-        return torch.optim.Adam(params, lr=1e-3)
+        criterion_params = [c.parameters() for c in self._criterion.values()]
+        return torch.optim.Adam(itertools.chain(model.parameters(), *criterion_params), lr=1e-3)
 
 
 def run(name: str = None, device: str = None, check: bool = False) -> dict:
