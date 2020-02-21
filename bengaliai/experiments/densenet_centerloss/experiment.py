@@ -218,7 +218,10 @@ class Experiment(SupervisedExperiment):
 
     def get_optimizer(self, stage: str, model):
         criterion_params = [c.parameters() for c in self._criterion.values()]
-        return torch.optim.Adam(itertools.chain(model.parameters(), *criterion_params), lr=1e-3)
+
+        return torch.optim.Adam([
+            {'params': model.parameters(), 'lr': 1e-3},
+            {'params': itertools.chain(*criterion_params), 'lr': 1e-5}])
 
 
 def run(name: str = None, device: str = None, check: bool = False) -> dict:
