@@ -114,7 +114,7 @@ def load_config_from_json(filepath: str = __file__):
         return json.load(f)
 
 
-def run(name: str = None, config: dict = None, device: str = None) -> dict:
+def run(name: str = None, config: dict = None, device: str = None, check: bool = False) -> dict:
     config = config or experiment_config
     device = device or utils.get_device()
     print(f"device: {device}")
@@ -137,7 +137,7 @@ def run(name: str = None, config: dict = None, device: str = None) -> dict:
         output_key=["logit_" + c for c in output_classes.keys()],
         input_target_key=list(output_classes.keys()),)
     experiment = Experiment(config)
-    runner.run_experiment(experiment)
+    runner.run_experiment(experiment, check=check)
 
     return {
         'runner': runner,

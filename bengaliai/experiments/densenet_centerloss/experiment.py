@@ -65,6 +65,7 @@ class Experiment(SupervisedExperiment):
             logdir='./logs',
             num_epochs=80,
             main_metric='hmar_avg',
+            minimize_metric=False,
             verbose=True,
             monitoring_params={
                 "name": experiment_name,

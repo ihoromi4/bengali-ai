@@ -17,9 +17,10 @@ experiment_config = {
     },
     "runner_params": {},
     "args": {
-        "main_metric": "hmar_avg",
         "logdir": "./logs",
-        "verbose": True
+        "verbose": True,
+        "main_metric": "hmar_avg",
+        "minimize_metric": False
     },
     "stages": {
         "data_params": {
