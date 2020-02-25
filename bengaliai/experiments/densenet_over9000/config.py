@@ -28,7 +28,7 @@ experiment_config = {
             "num_workers": 4
         },
         "state_params": {
-            "num_epochs": 30,
+            "num_epochs": 80,
             "checkpoint_data": {}
         },
         "criterion_params": {
@@ -65,9 +65,9 @@ experiment_config = {
                 "prefix": "loss",
                 "loss_aggregate_fn": "sum",
                 "loss_keys": {
-                    "loss_gr": 0.33,
-                    "loss_wd": 0.33,
-                    "loss_cd": 0.33
+                    "loss_gr": 0.7,
+                    "loss_wd": 0.2,
+                    "loss_cd": 0.1
                 }
             },
             "early_stopping": {
