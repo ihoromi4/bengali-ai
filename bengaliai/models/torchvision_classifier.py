@@ -11,14 +11,16 @@ class TorchVisionBengaliClassifier(nn.Module):
         self.one_channel = one_channel
         
         self.backbone = backbone(pretrained)
-        self.backbone.classifier = nn.Identity()
+        last_layer_name, _ = list(self.backbone.named_modules())[-1]
+        setattr(self.backbone, last_layer_name, nn.Identity())
         
+        conv0 = next((l for l in self.backbone.modules() if isinstance(l, nn.Conv2d)))
+
         if one_channel:
-            conv0 = next((l for l in self.backbone.features.modules() if isinstance(l, nn.Conv2d)))
             conv0.weight = nn.Parameter(conv0.weight.mean(1, keepdim=True))
             conv0.in_channels = 1
             
-        in_channels = self.backbone.features.conv0.in_channels
+        in_channels = conv0.in_channels
         test_tensor = torch.zeros((1, in_channels, 128, 128), device=self.device)
         dim = self.backbone(test_tensor).shape[1]
         self.classifier = MultiLabelLinearClassfier(dim, output_classes)
