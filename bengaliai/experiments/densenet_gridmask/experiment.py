@@ -51,7 +51,6 @@ class Experiment(ConfigExperiment):
                 # transformations
                 albumentations.ShiftScaleRotate(scale_limit=0.2, rotate_limit=25, border_mode=cv2.BORDER_CONSTANT, value=0, p=1.0),
                 # cut and drop
-                GridMask(p=0.75),
                 # distortion
                 albumentations.OneOf([
                     albumentations.OpticalDistortion(0.6, p=1.0),
@@ -65,6 +64,7 @@ class Experiment(ConfigExperiment):
                 ], p=2/3),
                 # common
                 albumentations.Normalize(TRAIN_MEAN, TRAIN_STD),
+                GridMask(p=0.75),
                 ToTensorV2(),
             ])
         elif mode == 'valid':
