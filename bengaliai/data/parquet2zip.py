@@ -17,9 +17,10 @@ def parquet_to_images(filenames: str, out_filename: str, size: int = 128):
         return
 
     print('Create file:', out_filename)
-    with zipfile.ZipFile(out_filename, 'w') as f_zip:
-        for filename in filenames:
-            df = pd.read_parquet(filename)
+    for filename in filenames:
+        df = pd.read_parquet(filename)
+
+        with zipfile.ZipFile(out_filename, 'a') as f_zip:
             print('Parquet loaded.')
 
             data = df.iloc[:, 1:].values.reshape(-1, HEIGHT, WIDTH).astype(np.uint8)
