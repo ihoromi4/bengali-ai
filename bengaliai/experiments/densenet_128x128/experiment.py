@@ -38,6 +38,8 @@ from .config import experiment_name, experiment_config
 import wandb
 
 SIZE = 128
+ZIP_TRAIN_FILE = f'train{SIZE}.zip'
+ZIP_TEST_FILE = f'test{SIZE}.zip'
 
 
 class Experiment(ConfigExperiment):
@@ -46,17 +48,30 @@ class Experiment(ConfigExperiment):
         if mode == 'train':
             return albumentations.Compose([
                 # blur
-                albumentations.Blur((1, 2), p=1.0),
+                albumentations.OneOf([
+                    albumentations.Blur((1, 4), p=1.0),
+                    albumentations.GaussianBlur(3, p=1.0),
+                    albumentations.MedianBlur(blur_limit=5, p=1.0),
+                ], p=3/4),
                 # transformations
-                albumentations.ShiftScaleRotate(scale_limit=0.1, rotate_limit=15, border_mode=cv2.BORDER_CONSTANT, value=0, p=1.0),
+                albumentations.ShiftScaleRotate(scale_limit=0.2, rotate_limit=25, border_mode=cv2.BORDER_CONSTANT, value=0, p=1.0),
                 # cut and drop
-                albumentations.Cutout(num_holes=8, max_h_size=SIZE//8, max_w_size=SIZE//8, p=1.0),
+                albumentations.OneOf([
+                    albumentations.Cutout(num_holes=10, max_h_size=SIZE//6, max_w_size=SIZE//6, p=1.0),
+                    albumentations.CoarseDropout(max_holes=8, max_height=10, max_width=10, p=1.0),
+                ], p=2/3),
                 # distortion
-                albumentations.OpticalDistortion(0.3, p=1.0),
-                albumentations.GridDistortion(5, 0.03, border_mode=cv2.BORDER_CONSTANT, value=0, p=1.0),
+                albumentations.OneOf([
+                    albumentations.OpticalDistortion(0.6, p=1.0),
+                    albumentations.GridDistortion(8, 0.06, border_mode=cv2.BORDER_CONSTANT, value=0, p=1.0),
+                    albumentations.ElasticTransform(sigma=10, alpha=1, alpha_affine=10, border_mode=cv2.BORDER_CONSTANT, value=0, p=1.0),
+                ], p=3/4),
                 # add noise
-                albumentations.GaussNoise((0, 150), p=1.0),
-                albumentations.MultiplicativeNoise(p=1.0),
+                albumentations.OneOf([
+                    albumentations.GaussNoise((0, 250), p=1.0),
+                    albumentations.MultiplicativeNoise(p=1.0),
+                ], p=2/3),
+                # common
                 albumentations.Normalize(TRAIN_MEAN, TRAIN_STD),
                 ToTensorV2(),
             ])
