@@ -1,13 +1,12 @@
-experiment_name = 'seresnext_aug2'
-
 experiment_config = {
     "monitoring_params": {
-        "name": experiment_name,
-        "tags": ["pytorch", "catalyst", "torchvision", "densenet201"],
+        "name": '<unnamed experiment>',
+        "tags": ["pytorch", "catalyst", "torchvision", "se_resnext"],
         "project": "bengali-ai"
     },
     "model_params": {
-        "model_name": "se_resnext101_32x4d",
+        "model_name": "se_resnext50_32x4d",
+#        "model_name": "se_resnext101_32x4d",
         "output_classes": [
             7,
             168,

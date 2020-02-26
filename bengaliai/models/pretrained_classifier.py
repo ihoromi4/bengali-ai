@@ -4,6 +4,14 @@ import pretrainedmodels
 from .mutlilinear import *
 
 
+class GlobalMaxPooling(nn.Module):
+    def forward(self, x):
+        x, _ = torch.max(x, dim=-1)
+        x, _ = torch.max(x, dim=-1)
+
+        return x
+
+
 class PretrainedModelsBengaliClassifier(nn.Module):
     def __init__(self, backbone, output_classes, pretrained='imagenet', one_channel: bool = True):
         super().__init__()
@@ -17,6 +25,7 @@ class PretrainedModelsBengaliClassifier(nn.Module):
             self.backbone = getattr(pretrainedmodels, backbone)(pretrained=pretrained)
             
         dim = self.backbone.last_linear.in_features
+        self.backbone.avg_pool = GlobalMaxPooling()
         self.backbone.last_linear = nn.Identity()
         
         if one_channel:
@@ -24,7 +33,7 @@ class PretrainedModelsBengaliClassifier(nn.Module):
             conv0.weight = nn.Parameter(conv0.weight.mean(1, keepdim=True))
             conv0.in_channels = 1
         
-        self.classifier = MultiLabelLinearClassfier(dim, output_classes)
+        self.classifier = MultiLabelLinearClassfier(2048, output_classes)
         
     @property
     def device(self):
