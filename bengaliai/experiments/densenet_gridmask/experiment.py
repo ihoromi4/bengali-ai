@@ -11,6 +11,7 @@ runner, experiment, config = densenet.run()
 """
 
 import os
+from os.path import basename, dirname, abspath
 import json
 import datetime
 from collections import OrderedDict
@@ -35,6 +36,8 @@ from bengaliai.data.parquet2zip import parquet_to_images
 from bengaliai.config import *
 from .config import experiment_name, experiment_config
 from ...gridmask import GridMask
+
+EXPERIMENT_NAME = basename(dirname(abspath(__file__)))
 
 
 class Experiment(ConfigExperiment):
@@ -114,8 +117,7 @@ def run(name: str = None, config: dict = None, device: str = None, check: bool =
 
     utils.set_global_seed(SEED)
 
-    # inititalize weigths & biases
-    name = name or '_'.join(filter(None, [experiment_name, f"{datetime.datetime.now():%Y-%m-%d-%S}"]))
+    config['monitoring_params']['name'] = EXPERIMENT_NAME
 
     # convert parquet ot zip
     parquet_to_images(TRAIN, ZIP_TRAIN_FILE, SIZE)

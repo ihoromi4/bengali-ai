@@ -1,8 +1,6 @@
-experiment_name = 'densenet201-128x128'
-
 experiment_config = {
     "monitoring_params": {
-        "name": experiment_name,
+        "name": '<unnamed experiment>',
         "tags": ["pytorch", "catalyst", "torchvision", "densenet201"],
         "project": "bengali-ai"
     },

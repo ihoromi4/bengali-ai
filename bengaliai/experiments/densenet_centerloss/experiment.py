@@ -11,6 +11,7 @@ runner, experiment = densenet.run()
 """
 
 import os
+from os.path import basename, dirname, abspath
 import json
 import datetime
 import itertools
@@ -40,11 +41,12 @@ from bengaliai.metrics import HMacroAveragedRecall, AverageMetric
 from bengaliai.data.parquet2zip import parquet_to_images
 from bengaliai.config import *
 
+from ...gridmask import GridMask
 #from .center_loss import CenterLoss
 from .scaled_center_loss import ScaledCenterLoss as CenterLoss
 
 use_gpu = torch.cuda.is_available()
-experiment_name = 'densenet_central_loss'
+EXPERIMENT_NAME = basename(dirname(abspath(__file__)))
 
 
 class CentralLossTorchVisionBengaliClassifier(TorchVisionBengaliClassifier):
@@ -70,7 +72,7 @@ class Experiment(SupervisedExperiment):
             minimize_metric=False,
             verbose=True,
             monitoring_params={
-                "name": experiment_name,
+                "name": EXPERIMENT_NAME,
                 "tags": ["pytorch", "catalyst", "torchvision", "densenet201"],
                 "project": "bengali-ai"
             }
@@ -83,21 +85,21 @@ class Experiment(SupervisedExperiment):
                 output_key="logit_grapheme_root",
                 criterion_key='cross_entropy',
                 prefix='loss_gr',
-                multiplier=0.33
+                multiplier=0.7
             )),
             ('loss_vd', CriterionCallback(
                 input_key="vowel_diacritic",
                 output_key="logit_vowel_diacritic",
                 criterion_key='cross_entropy',
                 prefix='loss_vd',
-                multiplier=0.33
+                multiplier=0.2
             )),
             ('loss_cd', CriterionCallback(
                 input_key="consonant_diacritic",
                 output_key="logit_consonant_diacritic",
                 criterion_key='cross_entropy',
                 prefix='loss_cd',
-                multiplier=0.33
+                multiplier=0.1
             )),
             # central loss
             ('central_gr', CriterionCallback(
@@ -112,14 +114,14 @@ class Experiment(SupervisedExperiment):
                 output_key="features",
                 criterion_key='central_vd',
                 prefix='central_vd',
-                multiplier=1e-4
+                multiplier=1e-5
             )),
             ('central_cd', CriterionCallback(
                 input_key="consonant_diacritic",
                 output_key="features",
                 criterion_key='central_cd',
                 prefix='central_cd',
-                multiplier=1e-4
+                multiplier=1e-5
             )),
             # aggregator
             ('loss', CriterionAggregatorCallback(
@@ -171,6 +173,7 @@ class Experiment(SupervisedExperiment):
                 ], p=2/3),
                 # common
                 albumentations.Normalize(TRAIN_MEAN, TRAIN_STD),
+                GridMask(p=0.75),
                 ToTensorV2(),
             ])
         elif mode == 'valid':
