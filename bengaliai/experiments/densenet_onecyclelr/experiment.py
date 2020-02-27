@@ -127,7 +127,7 @@ class Experiment(ConfigExperiment):
         return model
 
 
-def find_lr_range(final_lr: float = 0.1, num_steps: int = 1413):
+def find_lr_range(final_lr: float = 1.0, num_steps: int = 1413):
     config = copy.deepcopy(experiment_config)
     del config["stages"]["scheduler_params"]
     config["stages"]["stage1"]["optimizer_params"]["lr"] = 1e-6
@@ -136,7 +136,7 @@ def find_lr_range(final_lr: float = 0.1, num_steps: int = 1413):
         "callback": "LRFinderLogger",
         "final_lr": final_lr,
         "num_steps": num_steps,
-        "scale": "linear",
+        "scale": "log",
     }
 
     experiment = Experiment(config)
@@ -153,11 +153,13 @@ def find_lr_range(final_lr: float = 0.1, num_steps: int = 1413):
     
     import matplotlib.pyplot as plt
     plt.plot(runner.callbacks['lr_finder'].lr_history, runner.callbacks['lr_finder'].loss_history)
+    plt.xscale('log')
+    plt.plot()
     
     return experiment, runner
 
 
-def run(max_lr: float, steps_per_epoch: int = 1413, device: str = None, check: bool = False) -> dict:
+def run(max_lr: float = 1e-3, steps_per_epoch: int = 1413, device: str = None, check: bool = False) -> dict:
     config = copy.deepcopy(experiment_config)
     device = device or utils.get_device()
     print(f"device: {device}")
@@ -171,11 +173,14 @@ def run(max_lr: float, steps_per_epoch: int = 1413, device: str = None, check: b
     config['monitoring_params']['name'] = EXPERIMENT_NAME
     config['stages']['state_params']['checkpoint_data']['image_size'] = SIZE
 
+    # add scheduler to config
     config["stages"]["scheduler_params"] = {
         "scheduler": "OneCycleLR",
         "max_lr": max_lr,
         "epochs": config["stages"]["state_params"]["num_epochs"],
         "steps_per_epoch": steps_per_epoch,
+        "div_factor": 1e3,
+        "final_div_factor": 1e3,
     }
     experiment = Experiment(config)
 
