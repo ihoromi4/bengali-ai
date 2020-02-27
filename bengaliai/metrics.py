@@ -22,7 +22,7 @@ class HMacroAveragedRecall(MetricCallback):
     def metric_fn(self, outputs, target, **kwargs):
         outputs = torch.max(outputs, dim=-1)[1].detach().cpu().numpy()
         target = target.detach().cpu().unsqueeze(-1).numpy()
-        return recall_score(target, outputs, average='macro')
+        return recall_score(target, outputs, average='macro', zero_division=0)
 
 
 class AverageMetric(LoggerCallback):
