@@ -36,8 +36,9 @@ from bengaliai.metrics import HMacroAveragedRecall, AverageMetric
 from bengaliai.data.parquet2zip import parquet_to_images
 from bengaliai.config import *
 from .config import experiment_config
+from ...gridmask import GridMask
 
-SIZE = 64
+SIZE = 128
 ZIP_TRAIN_FILE = f'train{SIZE}.zip'
 ZIP_TEST_FILE = f'test{SIZE}.zip'
 EXPERIMENT_NAME = basename(dirname(abspath(__file__)))
@@ -61,11 +62,6 @@ class Experiment(ConfigExperiment):
                 ], p=3/4),
                 # transformations
                 albumentations.ShiftScaleRotate(scale_limit=0.2, rotate_limit=25, border_mode=cv2.BORDER_CONSTANT, value=0, p=1.0),
-                # cut and drop
-                albumentations.OneOf([
-                    albumentations.Cutout(num_holes=10, max_h_size=SIZE//6, max_w_size=SIZE//6, p=1.0),
-                    albumentations.CoarseDropout(max_holes=8, max_height=10, max_width=10, p=1.0),
-                ], p=2/3),
                 # distortion
                 albumentations.OneOf([
                     albumentations.OpticalDistortion(0.6, p=1.0),
@@ -79,6 +75,7 @@ class Experiment(ConfigExperiment):
                 ], p=2/3),
                 # common
                 albumentations.Normalize(TRAIN_MEAN, TRAIN_STD),
+                GridMask(p=0.75),
                 ToTensorV2(),
             ])
         elif mode == 'valid':
