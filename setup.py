@@ -41,6 +41,7 @@ setup(
         'tqdm',
         'wandb',
         'pretrainedmodels',
+        'efficientnet_pytorch',
         'kaggle',
     ],
 )
