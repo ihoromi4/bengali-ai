@@ -159,7 +159,7 @@ def find_lr_range(final_lr: float = 1.0, num_steps: int = 1413):
     return experiment, runner
 
 
-def run(max_lr: float = 1e-3, steps_per_epoch: int = 1413, device: str = None, check: bool = False) -> dict:
+def run(max_lr: float = 1e-2, steps_per_epoch: int = 1413, device: str = None, check: bool = False) -> dict:
     config = copy.deepcopy(experiment_config)
     device = device or utils.get_device()
     print(f"device: {device}")
@@ -179,7 +179,7 @@ def run(max_lr: float = 1e-3, steps_per_epoch: int = 1413, device: str = None, c
         "max_lr": max_lr,
         "epochs": config["stages"]["state_params"]["num_epochs"],
         "steps_per_epoch": steps_per_epoch,
-        "div_factor": 3,
+        "div_factor": 10,
         "final_div_factor": 1e3,
     }
     experiment = Experiment(config)
