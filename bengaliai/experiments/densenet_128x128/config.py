@@ -22,7 +22,7 @@ experiment_config = {
     },
     "stages": {
         "data_params": {
-            "batch_size": 64,
+            "batch_size": 128,
             "num_workers": 4
         },
         "state_params": {
@@ -37,7 +37,7 @@ experiment_config = {
             "mode": "min",
             "factor": 0.5,
             "patience": 3,
-            "min_lr": 0.00001
+            "min_lr": 0.000001
         },
         "callbacks_params": {
             "loss_gr": {
@@ -110,7 +110,7 @@ experiment_config = {
         "stage1": {
             "optimizer_params": {
                 "optimizer": "Adam",
-                "lr": 0.001
+                "lr": 0.0004
             }
         }
     }
