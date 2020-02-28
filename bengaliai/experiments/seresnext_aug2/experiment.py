@@ -64,7 +64,7 @@ class Experiment(ConfigExperiment):
                 albumentations.ShiftScaleRotate(scale_limit=0.2, rotate_limit=25, border_mode=cv2.BORDER_CONSTANT, value=0, p=1.0),
                 # distortion
                 albumentations.OneOf([
-                    albumentations.OpticalDistortion(0.6, p=1.0),
+                    albumentations.OpticalDistortion(1.2, p=1.0),
                     albumentations.GridDistortion(8, 0.06, border_mode=cv2.BORDER_CONSTANT, value=0, p=1.0),
                     albumentations.ElasticTransform(sigma=10, alpha=1, alpha_affine=10, border_mode=cv2.BORDER_CONSTANT, value=0, p=1.0),
                 ], p=3/4),
@@ -75,7 +75,7 @@ class Experiment(ConfigExperiment):
                 ], p=2/3),
                 # common
                 albumentations.Normalize(TRAIN_MEAN, TRAIN_STD),
-                GridMask(p=0.75),
+                GridMask(5, rotate=45, p=0.9),
                 ToTensorV2(),
             ])
         elif mode == 'valid':

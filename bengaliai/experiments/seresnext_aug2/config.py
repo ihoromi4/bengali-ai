@@ -64,9 +64,9 @@ experiment_config = {
                 "prefix": "loss",
                 "loss_aggregate_fn": "sum",
                 "loss_keys": {
-                    "loss_gr": 0.33,
-                    "loss_wd": 0.33,
-                    "loss_cd": 0.33
+                    "loss_gr": 0.7,
+                    "loss_wd": 0.2,
+                    "loss_cd": 0.1
                 }
             },
             "early_stopping": {
@@ -111,7 +111,7 @@ experiment_config = {
         "stage1": {
             "optimizer_params": {
                 "optimizer": "Adam",
-                "lr": 0.001
+                "lr": 0.0004
             }
         }
     }
