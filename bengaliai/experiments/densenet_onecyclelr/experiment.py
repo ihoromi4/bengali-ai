@@ -179,7 +179,7 @@ def run(max_lr: float = 1e-3, steps_per_epoch: int = 1413, device: str = None, c
         "max_lr": max_lr,
         "epochs": config["stages"]["state_params"]["num_epochs"],
         "steps_per_epoch": steps_per_epoch,
-        "div_factor": 1e3,
+        "div_factor": 3,
         "final_div_factor": 1e3,
     }
     experiment = Experiment(config)

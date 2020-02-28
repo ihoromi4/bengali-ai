@@ -32,13 +32,6 @@ experiment_config = {
         "criterion_params": {
             "criterion": "CrossEntropyLoss"
         },
-        "scheduler_params": {
-            "scheduler": "ReduceLROnPlateau",
-            "mode": "min",
-            "factor": 0.5,
-            "patience": 2,
-            "min_lr": 0.00001
-        },
         "callbacks_params": {
             "loss_gr": {
                 "callback": "CriterionCallback",
