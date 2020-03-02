@@ -125,6 +125,7 @@ def run(
         name: str = None,
         config: dict = None,
         model_filepath: str = None,
+        logdir_suffix: str = '',
         device: str = None,
         check: bool = False) -> dict:
 
@@ -136,6 +137,7 @@ def run(
 
     config['monitoring_params']['name'] = EXPERIMENT_NAME
     config['stages']['state_params']['checkpoint_data']['image_size'] = SIZE
+    config['args']['logdir'] += logdir_suffix
 
     # convert parquet ot zip
     parquet_to_images(TRAIN, ZIP_TRAIN_FILE, SIZE)
