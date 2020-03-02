@@ -26,8 +26,8 @@ import torch
 from torchvision import models
 
 from catalyst.dl import ConfigExperiment
-#from catalyst.dl import SupervisedRunner
-from catalyst.dl import SupervisedWandbRunner as SupervisedRunner
+from catalyst.dl import SupervisedRunner
+from catalyst.dl import SupervisedWandbRunner
 from catalyst.dl import utils
 
 from bengaliai.data.zip_dataset import ZIPImageDataset
@@ -142,7 +142,8 @@ def run(
     parquet_to_images(TEST, ZIP_TEST_FILE, SIZE)
 
     # run experiment
-    runner = SupervisedRunner(
+    RunnerClass = SupervisedRunner if check else SupervisedWandbRunner
+    runner = RunnerClass(
         device=device,
         input_key="images",
         output_key=["logit_" + c for c in output_classes.keys()],
