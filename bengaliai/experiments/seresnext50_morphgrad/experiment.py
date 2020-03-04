@@ -77,6 +77,7 @@ class Experiment(ConfigExperiment):
             ])
         elif mode == 'valid':
             return albumentations.Compose([
+                MorphologyGradient(p=1.0),
                 albumentations.Normalize(TRAIN_MEAN, TRAIN_STD),
                 ToTensorV2(),
             ])
