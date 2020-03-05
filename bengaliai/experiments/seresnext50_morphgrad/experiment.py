@@ -64,7 +64,7 @@ class Experiment(ConfigExperiment):
                     albumentations.ElasticTransform(sigma=10, alpha=1, alpha_affine=10, border_mode=cv2.BORDER_CONSTANT, value=0, p=1.0),
                 ], p=3/4),
                 # custom
-                MorphologyGradient(p=1.0),
+                MorphologyGradient(binarize=True, p=1.0),
                 # add noise
                 albumentations.OneOf([
                     albumentations.GaussNoise((0, 150), p=1.0),
