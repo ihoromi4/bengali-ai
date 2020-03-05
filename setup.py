@@ -42,6 +42,7 @@ setup(
         'wandb',
         'pretrainedmodels',
         'efficientnet_pytorch',
+        'iterative-stratification',
         'kaggle',
     ],
 )
