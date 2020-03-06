@@ -177,8 +177,9 @@ def run(
         "max_lr": max_lr,
         "epochs": config["stages"]["state_params"]["num_epochs"],
         "steps_per_epoch": steps_per_epoch,
-        "div_factor": 200,
+        "div_factor": 500,
         "final_div_factor": 1e5,
+        "max_momentum": 0.999
     }
 
     # run experiment

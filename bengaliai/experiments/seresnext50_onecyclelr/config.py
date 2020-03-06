@@ -111,7 +111,8 @@ experiment_config = {
         "stage1": {
             "optimizer_params": {
                 "optimizer": "Adam",
-                "lr": 0.0004,
+                "lr": 0.0002,
+                "betas": (0.99, 0.999),
                 "weight_decay": 0.0001
             }
         }
