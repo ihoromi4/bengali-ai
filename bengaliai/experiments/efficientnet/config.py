@@ -5,7 +5,7 @@ experiment_config = {
         "project": "bengali-ai"
     },
     "model_params": {
-        "model_name": "efficientnet-b4",
+        "model_name": "efficientnet-b5",
         "output_classes": [
             7,
             168,
@@ -22,7 +22,7 @@ experiment_config = {
     },
     "stages": {
         "data_params": {
-            "batch_size": 192,
+            "batch_size": 64,
             "num_workers": 4
         },
         "state_params": {

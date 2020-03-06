@@ -67,7 +67,7 @@ class Experiment(ConfigExperiment):
                 ], p=2/3),
                 # common
                 albumentations.Normalize(TRAIN_MEAN, TRAIN_STD),
-                GridMask(p=0.75),
+                GridMask((3, 7), rotate=15, p=0.75),
                 ToTensorV2(),
             ])
         elif mode == 'valid':
