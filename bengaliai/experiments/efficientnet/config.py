@@ -44,29 +44,28 @@ experiment_config = {
                 "callback": "CriterionCallback",
                 "input_key": "grapheme_root",
                 "output_key": "logit_grapheme_root",
-                "prefix": "loss_gr"
+                "prefix": "loss_gr",
+                "multiplier": 0.7
             },
             "loss_vd": {
                 "callback": "CriterionCallback",
                 "input_key": "vowel_diacritic",
                 "output_key": "logit_vowel_diacritic",
-                "prefix": "loss_wd"
+                "prefix": "loss_wd",
+                "multiplier": 0.2
             },
             "loss_cd": {
                 "callback": "CriterionCallback",
                 "input_key": "consonant_diacritic",
                 "output_key": "logit_consonant_diacritic",
-                "prefix": "loss_cd"
+                "prefix": "loss_cd",
+                "multiplier": 0.1
             },
             "loss": {
                 "callback": "CriterionAggregatorCallback",
                 "prefix": "loss",
                 "loss_aggregate_fn": "sum",
-                "loss_keys": {
-                    "loss_gr": 0.7,
-                    "loss_wd": 0.2,
-                    "loss_cd": 0.1
-                }
+                "loss_keys": ["loss_gr", "loss_wd", "loss_cd"]
             },
             "early_stopping": {
                 "callback": "EarlyStoppingCallback",
