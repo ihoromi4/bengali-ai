@@ -35,8 +35,7 @@ experiment_config = {
         },
         "scheduler_params": {
             "scheduler": "CosineAnnealingLR",
-            "T_max": 3000,
-            "T_max": 3000,
+            "T_max": 5,
         },
         "callbacks_params": {
             "loss_gr": {
@@ -110,7 +109,7 @@ experiment_config = {
             "optimizer_params": {
                 "optimizer": "Adam",
                 "lr": 0.0008,
-                "weight_decay": 0.0001
+                "weight_decay": 0.01
             }
         }
     }
