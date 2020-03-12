@@ -35,7 +35,7 @@ setup(
         'scikit-learn',
         'torch',
         'torchvision',
-        'catalyst[contrib]',
+        'catalyst[contrib]==20.02.4',
         'albumentations>=0.4.3',
         'opencv-contrib-python',
         'tqdm',
