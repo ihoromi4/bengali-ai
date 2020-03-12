@@ -130,9 +130,10 @@ def run(
     RunnerClass = SupervisedRunner if check else SupervisedWandbRunner
     runner = RunnerClass(
         device=device,
-#        input_key="images",
-#        output_key=["logit_" + c for c in output_classes.keys()],
-#        input_target_key=list(output_classes.keys()),)
+        input_key="images",
+        output_key=["logit_" + c for c in output_classes.keys()],
+        input_target_key=list(output_classes.keys()),
+    )
     experiment = Experiment(config, model_filepath)
     runner.run_experiment(experiment, check=check)
 

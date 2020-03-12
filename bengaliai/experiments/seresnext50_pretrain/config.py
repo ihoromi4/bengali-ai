@@ -14,11 +14,11 @@ experiment_config = {
         ],
         "pretrained": 'imagenet',
     },
-    "runner_params": {
-        "input_key": "images",
-        "output_key": ["logit_consonant_diacritic", "logit_grapheme_root", "logit_vowel_diacritic"],
-        "input_target_key": ["consonant_diacritic", "grapheme_root", "vowel_diacritic"]
-    },
+#    "runner_params": {  # not supported in catalyst
+#        "input_key": "images",
+#        "output_key": ["logit_consonant_diacritic", "logit_grapheme_root", "logit_vowel_diacritic"],
+#        "input_target_key": ["consonant_diacritic", "grapheme_root", "vowel_diacritic"]
+#    },
     "args": {
         "logdir": "./logs",
         "verbose": True,
