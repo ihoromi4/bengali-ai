@@ -113,7 +113,7 @@ experiment_config = {
         },
         "stage1": {
             "optimizer_params": {
-                "optimizer": "Adam",
+                "optimizer": "SGD",
                 "lr": 0.0004,
                 "weight_decay": 0.0001
             }
