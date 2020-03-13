@@ -45,7 +45,7 @@ EXPERIMENT_NAME = basename(dirname(abspath(__file__)))
 
 
 class Experiment(ConfigExperiment):
-    def __init__(self, config, model_filepath: str = None):
+    def __init__(self, config: dict = experiment_config, model_filepath: str = None):
         super().__init__(config)
 
         self._model_filepath = model_filepath

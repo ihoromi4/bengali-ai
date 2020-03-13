@@ -127,10 +127,9 @@ def load_config_from_json(filepath: str = __file__):
 
 
 def run(
-        name: str = None,
         config: dict = None,
         model_filepath: str = None,
-        logdir_suffix: str = '',
+        logdir_suffix: str = '_' + EXPERIMENT_NAME,
         device: str = None,
         check: bool = False) -> dict:
 

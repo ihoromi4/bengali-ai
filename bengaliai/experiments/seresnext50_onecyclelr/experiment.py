@@ -64,7 +64,7 @@ CALLBACKS.add(LRFinderLogger)
 
 
 class Experiment(ConfigExperiment):
-    def __init__(self, config, model_filepath: str = None):
+    def __init__(self, config: dict = experiment_config, model_filepath: str = None):
         super().__init__(config)
 
         self._model_filepath = model_filepath
@@ -151,7 +151,7 @@ def find_lr_range(final_lr: float = 1.0, num_steps: int = 1413):
 def run(
         config: dict = None,
         model_filepath: str = None,
-        logdir_suffix: str = '',
+        logdir_suffix: str = '_' + EXPERIMENT_NAME,
         max_lr: float = 1e-1,
         steps_per_epoch: int = 1413,
         device: str = None,

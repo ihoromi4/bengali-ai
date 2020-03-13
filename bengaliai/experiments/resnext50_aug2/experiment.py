@@ -39,6 +39,11 @@ import wandb
 
 
 class Experiment(ConfigExperiment):
+    def __init__(self, config: dict = experiment_config, model_filepath: str = None):
+        super().__init__(config)
+
+        self._model_filepath = model_filepath
+
     @staticmethod
     def get_transforms(stage: str = None, mode: str = None):
         if mode == 'train':
@@ -111,7 +116,13 @@ def load_config_from_json(filepath: str = __file__):
         return json.load(f)
 
 
-def run(name: str = None, config: dict = None, device: str = None, check: bool = False) -> dict:
+def run(
+        config: dict = None,
+        model_filepath: str = None,
+        logdir_suffix: str = '_' + EXPERIMENT_NAME,
+        device: str = None,
+        check: bool = False) -> dict:
+
     config = config or experiment_config
     device = device or utils.get_device()
     print(f"device: {device}")

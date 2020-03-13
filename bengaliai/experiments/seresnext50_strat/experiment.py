@@ -59,7 +59,7 @@ def stratified_train_test_split(x, test_size: float = 0.1, random_state=None, sh
 
 
 class Experiment(ConfigExperiment):
-    def __init__(self, config, model_filepath: str = None):
+    def __init__(self, config: dict = experiment_config, model_filepath: str = None):
         super().__init__(config)
 
         self._model_filepath = model_filepath
@@ -119,10 +119,9 @@ def load_config_from_json(filepath: str = __file__):
 
 
 def run(
-        name: str = None,
         config: dict = None,
         model_filepath: str = None,
-        logdir_suffix: str = '',
+        logdir_suffix: str = '_' + EXPERIMENT_NAME,
         device: str = None,
         check: bool = False) -> dict:
 
