@@ -51,7 +51,7 @@ def module_replace(model, module_type, replace_fn):
         if isinstance(child, module_type):
             setattr(model, child_name, replace_fn(child_name, child))
         else:
-            module_replace(model, module_type, replace_fn)
+            module_replace(child, module_type, replace_fn)
 
 
 class Experiment(ConfigExperiment):
