@@ -100,7 +100,7 @@ class Experiment(ConfigExperiment):
     def _get_model(self, model_name: str, output_classes: list, pretrained: str):
         model = PretrainedModelsBengaliClassifier(model_name, output_classes, pretrained)
 
-        module_replace(nn.ReLU, lambda name, module: Mish())
+        module_replace(model, nn.ReLU, lambda name, module: Mish())
 
         if self._model_filepath:
             checkpoint = torch.load(self._model_filepath)
